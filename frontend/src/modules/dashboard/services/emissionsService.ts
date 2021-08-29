@@ -7,7 +7,7 @@ import idb from '@/services/idb'
 
 interface IEmissionService {
   getProducts(): Promise<IProductFE[]>
-  getProductAverage(product: string, params: IProductQuery): Promise<IProductAverage>
+  getProductAverage(product: string, params: IProductQuery): Promise<IProductAverage[]>
   getProductDataRange(product: string, params: IProductQuery): Promise<IProductDataRange>
 }
 
@@ -27,9 +27,15 @@ export default class EmissionsService extends BaseApiService implements IEmissio
     return products
   }
 
-  async getProductAverage(product: string, params: IProductQuery = { limit: 100 }): Promise<IProductAverage> {
-    const response: AxiosResponse = await this.axios.get(`${this.resource}/${product}/average.json`, { params })
-    return response.data
+  async getProductAverage(product: string, params: IProductQuery = { limit: 100 }): Promise<IProductAverage[]> {
+    // Note: check cache or download data from api
+    let average = await idb.queries.get(JSON.stringify(params))
+    if (!average) {
+      const response: AxiosResponse = await this.axios.get(`${this.resource}/${product}/average.json`, { params })
+      average = response?.data
+      await idb.queries.set(JSON.stringify(params), response?.data)
+    }
+    return average as IProductAverage[]
   }
 
   async getProductDataRange(product: string, params: IProductQuery = { limit: 100 }): Promise<IProductDataRange> {

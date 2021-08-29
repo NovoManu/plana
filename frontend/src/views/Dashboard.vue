@@ -8,8 +8,9 @@
   export default {
     name: 'Index',
     async mounted() {
-      const data = await emissionsService.getProducts()
-      console.log(data)
+      const products = await emissionsService.getProducts()
+      const average = await emissionsService.getProductAverage(products[0].name)
+      console.log(average)
     },
   }
 </script>

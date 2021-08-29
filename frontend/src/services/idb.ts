@@ -1,12 +1,12 @@
-import { openDB, DBSchema, StoreKey } from 'idb'
-import { IProductFE } from '@/modules/dashboard/services/types'
+import { openDB, DBSchema } from 'idb'
+import { IProductFE, IProductAverage } from '@/modules/dashboard/services/types'
 
 const IDB_NAME = 'plana-db'
 const IDB_VERSION = 1
 
-enum DB_Entities {
+export enum DB_Entities {
   PRODUCTS = 'products',
-  QUERIES = ' queries',
+  AVERAGE_QUERIES = 'queries',
 }
 
 interface PlanADB extends DBSchema {
@@ -14,11 +14,16 @@ interface PlanADB extends DBSchema {
     key: string
     value: IProductFE[]
   }
+  [DB_Entities.AVERAGE_QUERIES]: {
+    key: string
+    value: IProductAverage[]
+  }
 }
 
 const db = openDB<PlanADB>(IDB_NAME, IDB_VERSION, {
   upgrade(db) {
     db.createObjectStore(DB_Entities.PRODUCTS)
+    db.createObjectStore(DB_Entities.AVERAGE_QUERIES)
   },
 })
 
@@ -31,6 +36,7 @@ interface IDBAccess<T> {
 
 interface IDBSchema {
   [DB_Entities.PRODUCTS]: IDBAccess<IProductFE[]>
+  [DB_Entities.AVERAGE_QUERIES]: IDBAccess<IProductAverage[]>
 }
 
 const idb: IDBSchema = {
@@ -46,6 +52,20 @@ const idb: IDBSchema = {
     },
     async clear(): Promise<void> {
       return (await db).clear(DB_Entities.PRODUCTS)
+    },
+  },
+  [DB_Entities.AVERAGE_QUERIES]: {
+    async get(key: string): Promise<IProductAverage[] | undefined> {
+      return (await db).get(DB_Entities.AVERAGE_QUERIES, key)
+    },
+    async set(key: string, value: IProductAverage[]): Promise<string> {
+      return (await db).put(DB_Entities.AVERAGE_QUERIES, value, key)
+    },
+    async del(key: string): Promise<void> {
+      return (await db).delete(DB_Entities.AVERAGE_QUERIES, key)
+    },
+    async clear(): Promise<void> {
+      return (await db).clear(DB_Entities.AVERAGE_QUERIES)
     },
   },
 }
