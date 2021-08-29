@@ -29,11 +29,12 @@ export default class EmissionsService extends BaseApiService implements IEmissio
 
   async getProductAverage(product: string, params: IProductQuery = { limit: 100 }): Promise<IProductAverage[]> {
     // Note: check cache or download data from api
-    let average = await idb.queries.get(JSON.stringify(params))
+    const query = `${product}: ${JSON.stringify(params)}`
+    let average = await idb.queries.get(query)
     if (!average) {
       const response: AxiosResponse = await this.axios.get(`${this.resource}/${product}/average.json`, { params })
-      average = response?.data
-      await idb.queries.set(JSON.stringify(params), response?.data)
+      average = response?.data || []
+      await idb.queries.set(query, average as IProductAverage[])
     }
     return average as IProductAverage[]
   }
