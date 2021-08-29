@@ -8,7 +8,7 @@
   export default {
     name: 'Index',
     async mounted() {
-      const data = await emissionsService.getProductAverage('methane')
+      const data = await emissionsService.getProducts()
       console.log(data)
     },
   }

@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
 import { EMISSIONS_URL } from '@/services/config'
 
-type ErrorFunction = (error: any) => any
+type ErrorFunction = (error: never) => any
 
 export const errorHandler = (): ErrorFunction => {
   return (error: AxiosError): void => {

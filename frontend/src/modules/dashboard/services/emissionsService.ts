@@ -3,6 +3,7 @@ import emissionsAxiosInstance from '@/services/emissionsAxiosInstance'
 import { IProductAverage, IProductDataRange, IProductFE, IProductQuery } from '@/modules/dashboard/services/types'
 import { AxiosResponse } from 'axios'
 import { mapProductToFE } from '@/modules/dashboard/services/mappers'
+import idb from '@/services/idb'
 
 interface IEmissionService {
   getProducts(): Promise<IProductFE[]>
@@ -16,8 +17,14 @@ export default class EmissionsService extends BaseApiService implements IEmissio
   }
 
   async getProducts(): Promise<IProductFE[]> {
-    const response: AxiosResponse = await this.axios.get(`${this.resource}/products.json`)
-    return mapProductToFE(response?.data)
+    // Note: check cache or download data from api
+    let products = await idb.products.get('products')
+    if (!products) {
+      const response: AxiosResponse = await this.axios.get(`${this.resource}/products.json`)
+      products = mapProductToFE(response?.data)
+      await idb.products.set('products', products)
+    }
+    return products
   }
 
   async getProductAverage(product: string, params: IProductQuery = { limit: 100 }): Promise<IProductAverage> {
@@ -26,7 +33,7 @@ export default class EmissionsService extends BaseApiService implements IEmissio
   }
 
   async getProductDataRange(product: string, params: IProductQuery = { limit: 100 }): Promise<IProductDataRange> {
-    const response: AxiosResponse = await this.axios.get(`${this.resource}/${product}/data-range.json`)
+    const response: AxiosResponse = await this.axios.get(`${this.resource}/${product}/data-range.json`, { params })
     return response.data
   }
 }
