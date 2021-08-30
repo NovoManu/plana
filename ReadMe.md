@@ -2,6 +2,13 @@
 
 ### Backend
 
+Install composer `https://getcomposer.org/download/`
+
+Install dependencies with composer
+```
+php composer.phar update
+```
+
 ### Frontend
 
 Install dependencies
