@@ -1,5 +1,6 @@
 export interface ICountry {
   name: string
+  code: string
   icon: string
 }
 
@@ -8,5 +9,5 @@ export interface IChartConfiguration {
   product: string | null
   begin: string | null
   end: string | null
-  country: string | null
+  country: string
 }

@@ -14,6 +14,7 @@
         option-label="name"
         option-value="name"
         placeholder="Select product"
+        @change="setConfiguration('product', $event.value)"
       />
     </div>
     <Listbox
@@ -22,6 +23,8 @@
       option-label="name"
       :filter="true"
       listStyle="max-height:250px"
+      option-value="code"
+      @change="setConfiguration('country', $event.value)"
     >
       <template #option="slotProps">
         <div>
@@ -43,9 +46,9 @@
   import { IProductFE } from '@/modules/dashboard/services/types'
 
   const countries: ICountry[] = [
-    { name: 'Germany', icon: require('@/assets/img/germany.png') },
-    { name: 'United Kingdom', icon: require('@/assets/img/uk.png') },
-    { name: 'France', icon: require('@/assets/img/france.png') },
+    { name: 'Germany', code: 'de', icon: require('@/assets/img/germany.png') },
+    { name: 'United Kingdom', code: 'gb', icon: require('@/assets/img/uk.png') },
+    { name: 'France', code: 'fr', icon: require('@/assets/img/france.png') },
   ]
 
   interface IData {
@@ -84,6 +87,17 @@
       this.$watch('date', (dates: string[]) => {
         this.setConfiguration('dates', dates)
       })
+      this.$watch(
+        'configuration',
+        (configuration: IChartConfiguration) => {
+          if (!this.date.length && configuration.begin && configuration.end) {
+            const start = new Date(configuration.begin)
+            const end = new Date(configuration.end)
+            this.date = [start, end]
+          }
+        },
+        { immediate: true, deep: true },
+      )
     },
     methods: {
       setLastMonth(): void {
