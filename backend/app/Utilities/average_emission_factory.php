@@ -15,7 +15,7 @@ function average_emission_factory($dates, $product): array
             'start' => $date,
             'end' => (new DateTime($date))
                 ->modify('+1 day')
-                ->format('Y-m-d\TH:i:s\Z'),
+                ->format(DATE_FORMAT),
         ]);
     }
     return $average;

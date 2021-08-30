@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -45,5 +46,14 @@ class EmissionController extends Controller
 
         $average = average_emission_factory($dates, $product);
         return response()->json($average);
+    }
+
+    public function getProductDateRange(): JsonResponse {
+        $first = (new DateTime('2019-04-23'))->format(DATE_FORMAT);
+        $last = (new DateTime())->format(DATE_FORMAT);
+        return response()->json([
+           'first' => $first,
+           'last' => $last,
+        ]);
     }
 }

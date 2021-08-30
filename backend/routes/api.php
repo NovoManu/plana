@@ -25,11 +25,6 @@ Route::prefix('{product}')->group(function () {
     Route::get('average.json', [EmissionController::class, 'getProductAverage'])
         ->whereAlpha('product');
 
-    Route::get('geo.json', function ($product) {
-        return $product . ' Geo';
-    })->whereAlpha('product');
-
-    Route::get('statistics.json', function ($product) {
-        return $product . ' Statistics';
-    })->whereAlpha('product');
+    Route::get('data-range.json', [EmissionController::class, 'getProductDateRange'])
+        ->whereAlpha('product');
 });

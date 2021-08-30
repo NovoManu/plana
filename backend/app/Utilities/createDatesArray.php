@@ -9,7 +9,7 @@ function createDatesArray($begin, $end, $limit): array
     );
     $dates = [];
     foreach ($period as $date) {
-        array_push($dates, $date->format('Y-m-d\TH:i:s\Z'));
+        array_push($dates, $date->format(DATE_FORMAT));
     }
     if ($limit) {
         $dates = array_slice($dates, 0, $limit);

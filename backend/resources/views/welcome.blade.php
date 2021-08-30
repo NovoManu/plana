@@ -7,6 +7,6 @@
     </head>
     <body>
         <div>API Service</div>
-        <div>Check API documentation <a href="/api/docs">here</a></div>
+        <div>Check API documentation <a href="https://api.v2.emissions-api.org/ui/" target="_blank">here</a></div>
     </body>
 </html>
