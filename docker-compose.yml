@@ -82,7 +82,7 @@ services:
     frontend:
       build:
         context: frontend
-      command: npm run serve
+      command: npm run dev
       environment:
         PORT: '8080'
         HOST: '0.0.0.0'

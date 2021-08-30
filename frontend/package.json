@@ -4,7 +4,8 @@
   "private": true,
   "author": "Manu Ustenko",
   "scripts": {
-    "serve": "vue-cli-service serve --mode=development",
+    "serve": "vue-cli-service serve --mode=prod",
+    "dev": "vue-cli-service serve --mode=dev",
     "build": "vue-cli-service build",
     "test": "vue-cli-service test:unit",
     "lint": "vue-cli-service lint",
