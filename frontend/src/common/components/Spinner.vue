@@ -20,7 +20,7 @@
 </script>
 
 <style lang="scss" scoped>
-  $logo-color: #1890ff;
+  @import "@/assets/scss/index.scss";
 
   .lds-roller {
     display: inline-block;
@@ -39,7 +39,7 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: $logo-color;
+    background: $primary-color;
     margin: -4px 0 0 -4px;
   }
   .lds-roller div:nth-child(1) {

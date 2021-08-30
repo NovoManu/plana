@@ -7,4 +7,9 @@ describe('AppLayoutMain', () => {
   it('renders', () => {
     expect(wrapper.exists()).toBeTruthy()
   })
+
+  it('shows logo', () => {
+    const logo = wrapper.find('[data-test="app-layout-logo"]')
+    expect(logo.text()).toEqual('Plan A')
+  })
 })

@@ -2,11 +2,26 @@
   <div class="action">
     <div class="action-left">
       <div class="action-left-item">
-        <Button label="Last Month" class="p-button-outlined mr-2" @click="setLastMonth" />
-        <Button label="Last Quarter" class="p-button-outlined mr-2" @click="setLastQuarter" />
-        <Button label="Last Year" class="p-button-outlined" @click="setLastYear" />
+        <Button
+          label="Last Month"
+          class="p-button-outlined mr-2"
+          data-test="dashboard-control-last-month-button"
+          @click="setLastMonth"
+        />
+        <Button
+          label="Last Quarter"
+          class="p-button-outlined mr-2"
+          data-test="dashboard-control-last-quarter-button"
+          @click="setLastQuarter"
+        />
+        <Button
+          label="Last Year"
+          class="p-button-outlined"
+          data-test="dashboard-control-last-year-button"
+          @click="setLastYear"
+        />
       </div>
-      <Calendar class="action-left-item" v-model="date" selection-mode="range" />
+      <Calendar class="action-left-item" v-model="date" data-test="dashboard-control-calendar" selection-mode="range" />
       <Dropdown
         :model-value="configuration.product"
         class="action-left-item"
@@ -14,6 +29,7 @@
         option-label="name"
         option-value="name"
         placeholder="Select product"
+        data-test="dashboard-control-product-selector"
         @change="setConfiguration('product', $event.value)"
       />
     </div>
@@ -24,6 +40,7 @@
       :filter="true"
       listStyle="max-height:250px"
       option-value="code"
+      data-test="dashboard-control-country-selector"
       @change="setConfiguration('country', $event.value)"
     >
       <template #option="slotProps">
