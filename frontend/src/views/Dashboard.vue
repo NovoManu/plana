@@ -1,45 +1,8 @@
 <template>
   <div class="container">
-    <div class="action">
-      <div class="action-left">
-        <div class="action-left-item">
-          <Button label="Primary" class="p-button-outlined mr-2" />
-          <Button label="Primary" class="p-button-outlined mr-2" />
-          <Button label="Primary" class="p-button-outlined" />
-        </div>
-        <Calendar
-          class="action-left-item"
-          v-model="configuration.date"
-          selection-mode="range"
-          :show-button-bar="true"
-        />
-        <Dropdown
-          class="action-left-item"
-          v-model="configuration.product"
-          :options="products"
-          option-label="name"
-          option-value="name"
-          placeholder="Select product"
-        />
-
-      </div>
-      <Listbox
-        v-model="configuration.country"
-        :options="countries"
-        option-label="name"
-        :filter="true"
-        listStyle="max-height:250px"
-      >
-        <template #option="slotProps">
-          <div>
-            <img :alt="slotProps.option.icon" :src="slotProps.option.icon" class="flag" />
-            <span>{{ slotProps.option.name }}</span>
-          </div>
-        </template>
-      </Listbox>
-    </div>
+    <DashboardControls :configuration="configuration" :products="products" />
     <div class="chart-container">
-      <BarChart v-if="!loading && labels && datasets" :labels="labels" :datasets="datasets" />
+      <BarChart v-if="isChartVisible" :labels="labels" :datasets="datasets" />
     </div>
   </div>
 </template>
@@ -51,47 +14,29 @@
   import { IChartDataHandler, ChartDataHandler } from '@/utils/ChartDataHandler'
   import { ChartDataset } from 'chart.js'
   import { IProductFE } from '@/modules/dashboard/services/types'
-  import Dropdown from 'primevue/dropdown'
-  import Calendar from 'primevue/calendar'
-  import Button from 'primevue/button'
-  import Listbox from 'primevue/listbox'
+  import { IChartConfiguration } from '@/modules/dashboard/types'
 
-  interface IChartConfiguration {
-    product: string | null
-    date: string[] | null
-  }
-
-  interface ICountry {
-    name: string
-    icon: string
-  }
+  import DashboardControls from '@/modules/dashboard/components/DashboardControls.vue'
 
   interface IData {
     loading: boolean
     products: IProductFE[]
-    countries: ICountry[]
     chartData: IChartDataHandler | null
     configuration: IChartConfiguration
   }
 
-  const countries: ICountry[] = [
-    { name: 'Germany', icon: require('@/assets/img/germany.png') },
-    { name: 'United Kingdom', icon: require('@/assets/img/uk.png') },
-    { name: 'France', icon: require('@/assets/img/france.png') },
-  ]
-
   export default defineComponent({
     name: 'Dashboard',
-    components: { BarChart, Dropdown, Calendar, Button, Listbox },
+    components: { DashboardControls, BarChart },
     data(): IData {
       return {
         loading: false,
         products: [],
-        countries,
         chartData: null,
         configuration: {
           product: null,
           date: null,
+          country: null,
         },
       }
     },
@@ -103,6 +48,9 @@
       datasets(): ChartDataset[] | null {
         if (!this.chartData) return null
         return this.chartData.getBarChartDatasets()
+      },
+      isChartVisible(): boolean {
+        return !!(!this.loading && this.labels && this.datasets)
       },
     },
     created() {
@@ -142,7 +90,7 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    align-items: start;
+    align-items: flex-start;
   }
   .action-left {
     display: flex;
