@@ -2,16 +2,11 @@
   <div class="action">
     <div class="action-left">
       <div class="action-left-item">
-        <Button label="Last Month" class="p-button-outlined mr-2" />
-        <Button label="Last Quarter" class="p-button-outlined mr-2" />
-        <Button label="Last Year" class="p-button-outlined" />
+        <Button label="Last Month" class="p-button-outlined mr-2" @click="setLastMonth" />
+        <Button label="Last Quarter" class="p-button-outlined mr-2" @click="setLastQuarter" />
+        <Button label="Last Year" class="p-button-outlined" @click="setLastYear" />
       </div>
-      <Calendar
-        class="action-left-item"
-        :model-value="configuration.date"
-        selection-mode="range"
-        :show-button-bar="true"
-      />
+      <Calendar class="action-left-item" v-model="date" selection-mode="range" />
       <Dropdown
         :model-value="configuration.product"
         class="action-left-item"
@@ -53,6 +48,18 @@
     { name: 'France', icon: require('@/assets/img/france.png') },
   ]
 
+  interface IData {
+    countries: ICountry[]
+    date: any[]
+  }
+
+  const getPeriod = (diff: number): Date[] => {
+    const date = new Date()
+    const start = new Date(date.setMonth(date.getMonth() - diff))
+    const end = new Date()
+    return [start, end]
+  }
+
   export default defineComponent({
     name: 'DashboardControls',
     components: { Dropdown, Calendar, Button, Listbox },
@@ -66,10 +73,45 @@
         required: true,
       },
     },
-    data() {
+    emits: ['setConfiguration'],
+    data(): IData {
       return {
         countries,
+        date: [],
       }
+    },
+    created() {
+      this.$watch('date', (dates: string[]) => {
+        this.setConfiguration('dates', dates)
+      })
+    },
+    methods: {
+      setLastMonth(): void {
+        const [start, end] = getPeriod(1)
+        this.setConfiguration('dates', [start.toString(), end.toString()])
+        this.date = [start, end]
+      },
+      setLastQuarter(): void {
+        const [start, end] = getPeriod(3)
+        this.setConfiguration('dates', [start.toString(), end.toString()])
+        this.date = [start, end]
+      },
+      setLastYear(): void {
+        const [start, end] = getPeriod(12)
+        this.setConfiguration('dates', [start.toString(), end.toString()])
+        this.date = [start, end]
+      },
+      setConfiguration(property: string, value: string | string[]) {
+        const copy = { ...this.configuration }
+        if (Array.isArray(value)) {
+          const [begin, end] = value
+          copy.begin = begin
+          copy.end = end
+        } else {
+          copy[property] = value
+        }
+        this.$emit('setConfiguration', copy)
+      },
     },
   })
 </script>

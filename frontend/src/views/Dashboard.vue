@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <DashboardControls :configuration="configuration" :products="products" />
+    <DashboardControls :configuration="configuration" :products="products" @setConfiguration="setConfiguration" />
     <div class="chart-container">
       <BarChart v-if="isChartVisible" :labels="labels" :datasets="datasets" />
     </div>
@@ -35,7 +35,8 @@
         chartData: null,
         configuration: {
           product: null,
-          date: null,
+          begin: null,
+          end: null,
           country: null,
         },
       }
@@ -76,6 +77,9 @@
         } finally {
           this.loading = false
         }
+      },
+      setConfiguration(configuration: IChartConfiguration) {
+        this.configuration = configuration
       },
     },
   })

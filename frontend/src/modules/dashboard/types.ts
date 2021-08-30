@@ -4,7 +4,9 @@ export interface ICountry {
 }
 
 export interface IChartConfiguration {
+  [key: string]: string | null
   product: string | null
-  date: string[] | null
+  begin: string | null
+  end: string | null
   country: string | null
 }
